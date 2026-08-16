@@ -1,5 +1,5 @@
 class_name PowerSystem
-extends Reference
+extends RefCounted
 
 var power_sources := {}
 var power_receivers := {}
@@ -15,9 +15,9 @@ var receivers_already_provided := {}
 
 
 func _init() -> void:
-	Events.connect("entity_placed", self, "_on_entity_placed")
-	Events.connect("entity_removed", self, "_on_entity_removed")
-	Events.connect("systems_ticked", self, "_on_systems_ticked")
+	Events.connect("entity_placed", Callable(self, "_on_entity_placed"))
+	Events.connect("entity_removed", Callable(self, "_on_entity_removed"))
+	Events.connect("systems_ticked", Callable(self, "_on_systems_ticked"))
 
 
 func _retrace_paths() -> void:

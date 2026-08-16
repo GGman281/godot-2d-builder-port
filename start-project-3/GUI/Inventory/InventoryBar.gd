@@ -3,8 +3,8 @@ extends HBoxContainer
 
 signal inventory_changed(panel, held_item)
 
-export var InventoryPanelScene: PackedScene
-export var slot_count := 10
+@export var InventoryPanelScene: PackedScene
+@export var slot_count := 10
 
 var panels := []
 
@@ -16,7 +16,7 @@ func _ready() -> void:
 func setup(gui: Control) -> void:
 	for panel in panels:
 		panel.setup(gui)
-		panel.connect("held_item_changed", self, "_on_Panel_held_item_changed")
+		panel.connect("held_item_changed", Callable(self, "_on_Panel_held_item_changed"))
 
 
 func find_panels_with(item_id: String) -> Array:
@@ -56,7 +56,7 @@ func add_to_first_available_inventory(item: BlueprintEntity) -> bool:
 
 func _make_panels() -> void:
 	for _i in slot_count:
-		var panel := InventoryPanelScene.instance()
+		var panel := InventoryPanelScene.instantiate()
 		add_child(panel)
 		panels.append(panel)
 

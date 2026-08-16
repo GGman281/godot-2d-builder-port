@@ -3,16 +3,16 @@ extends Node2D
 
 var blueprint: BlueprintEntity
 
-onready var collision_shape := $Area2D/CollisionShape2D
-onready var animation := $AnimationPlayer
-onready var sprite := $Sprite
-onready var tween := $Tween
+@onready var collision_shape := $Area2D/CollisionShape2D
+@onready var animation := $AnimationPlayer
+@onready var sprite := $Sprite2D
+@onready var tween := $Tween
 
 
 func setup(_blueprint: BlueprintEntity, location: Vector2) -> void:
 	blueprint = _blueprint
 	
-	var blueprint_sprite := blueprint.get_node("Sprite")
+	var blueprint_sprite := blueprint.get_node("Sprite2D")
 	sprite.texture = blueprint_sprite.texture
 	sprite.region_enabled = blueprint_sprite.region_enabled
 	sprite.region_rect = blueprint_sprite.region_rect
@@ -23,7 +23,7 @@ func setup(_blueprint: BlueprintEntity, location: Vector2) -> void:
 	_pop()
 
 
-func do_pickup(target: KinematicBody2D) -> void:
+func do_pickup(target: CharacterBody2D) -> void:
 	var travel_distance := 0.1
 	
 	collision_shape.set_deferred("disabled", true)
@@ -36,16 +36,16 @@ func do_pickup(target: KinematicBody2D) -> void:
 		global_position = global_position.move_toward(target.global_position, travel_distance)
 		travel_distance += 0.1
 		
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 
 	queue_free()
 
 
 func _pop() -> void:
-	var direction := Vector2.UP.rotated(rand_range(-PI, PI))
+	var direction := Vector2.UP.rotated(randf_range(-PI, PI))
 	
 	direction.y /= 2.0
-	direction *= rand_range(20, 70)
+	direction *= randf_range(20, 70)
 
 	var target_position := global_position + direction
 	
@@ -65,5 +65,5 @@ func _pop() -> void:
 	)
 	tween.start()
 	
-	yield(tween, "tween_all_completed")
+	await tween.tween_all_completed
 	animation.play("Float")
