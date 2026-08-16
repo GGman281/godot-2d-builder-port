@@ -11,3 +11,6 @@ res://Systems/EntityPlacer.gd
 res://Shared/Tileset.tres
 res://Entities/Blueprints/WireBlueprint.gd
 res://Entities/Player/Player.tscn
+res://Entities/Entities/BatteryEntity.gd
+res://Entities/Entities/StirlingEngineEntity.gd
+res://Entities/Entities/StirlingEngineEntity.tscn

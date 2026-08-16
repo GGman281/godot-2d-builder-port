@@ -12,12 +12,16 @@ code = "shader_type canvas_item;
 //A percentage from 0 to 1 for how full the battery is
 uniform float amount : hint_range(0, 1) = 0.0;
 
+//Get MODULATE colour:
+uniform vec4 MODULATE: source_color;
+
 void fragment() {
 	//Load the texture as a mask for our flat color indicator
 	vec4 mask = texture(TEXTURE, UV);
 	//We only need the red part of it. The rest, black or transparent, is of
 	//no interest.
 	float masking_area = mask.r;
+	
 	
 	//Set the percentage of the UV sampling along the X axis to either 0 or 1,
 	// based on how full the battery is. So if amount is 0.5, the percentage will
@@ -32,6 +36,8 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="2"]
 resource_local_to_scene = true
 shader = SubResource("1")
+shader_parameter/amount = 0.0
+shader_parameter/MODULATE = Color(0, 0, 0, 1)
 
 [node name="BatteryEntity" type="StaticBody2D" unique_id=1765243399 groups=["power_receivers", "power_sources"]]
 script = ExtResource("4")

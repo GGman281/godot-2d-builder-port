@@ -2,8 +2,6 @@ extends TileMapLayer
 
 const MAXIMUM_WORK_DISTANCE := 275.0
 
-const POSITION_OFFSET := Vector2(0,25)
-
 const DECONSTRUCT_TIME := 0.3
 
 var GroundEntityScene := preload("res://Entities/GroundItem.tscn")
@@ -30,34 +28,35 @@ func _unhandled_input(event: InputEvent) -> void:
 	var global_mouse_position := get_global_mouse_position()
 	
 	var has_placeable_blueprint: bool = _gui.blueprint and _gui.blueprint.placeable
-
+	
 	var is_close_to_player := (
 		global_mouse_position.distance_to(_player.global_position)
 		< MAXIMUM_WORK_DISTANCE
 	)
 	
-	var cell_source: = local_to_map(to_local(global_mouse_position))
+	var mouses_cell_position:Vector2i = local_to_map(get_local_mouse_position())
 	
-	var cell_is_occupied := _tracker.is_cell_occupied(cell_source)
+	var cell_is_occupied := _tracker.is_cell_occupied(mouses_cell_position)
 	
-	var is_on_ground := _ground.get_cell_source_id(cell_source) == 0
-
+	var is_on_ground := _ground.get_cell_source_id(mouses_cell_position) == 0
+	
+	
 	if event.is_action_pressed("left_click"):
 		if has_placeable_blueprint:
 			if not cell_is_occupied and is_close_to_player and is_on_ground:
-				_place_entity(cell_source)
-				_update_neighboring_flat_entities(cell_source)
+				_place_entity(mouses_cell_position)
+				_update_neighboring_flat_entities(mouses_cell_position)
 
 	elif event.is_action_pressed("right_click") and not has_placeable_blueprint:
 		if cell_is_occupied and is_close_to_player:
-			_deconstruct(global_mouse_position, cell_source)
+			_deconstruct(global_mouse_position, mouses_cell_position)
 
 	elif event is InputEventMouseMotion:
-		if cell_source != _current_deconstruct_location:
+		if mouses_cell_position != _current_deconstruct_location:
 			_abort_deconstruct()
 		
 		if has_placeable_blueprint:
-			_move_blueprint_in_world(cell_source)
+			_move_blueprint_in_world(mouses_cell_position)
 
 	elif event.is_action_pressed("drop") and _gui.blueprint:
 		if is_on_ground:
@@ -105,7 +104,7 @@ func _place_entity(cellv: Vector2) -> void:
 	else:
 		add_child(new_entity)
 
-	new_entity.global_position = map_to_local(cellv) + POSITION_OFFSET
+	new_entity.global_position = map_to_local(cellv)
 
 	new_entity._setup(_gui.blueprint)
 
@@ -117,20 +116,20 @@ func _place_entity(cellv: Vector2) -> void:
 		_gui.blueprint.stack_count -= 1
 		_gui.update_label()
 
-## TODO!
+
 func _move_blueprint_in_world(cell_source: Vector2) -> void:
 	_gui.blueprint.display_as_world_entity()
 	
-	_gui.blueprint.global_position = get_viewport_transform() * (map_to_local(cell_source) + POSITION_OFFSET)
-
+	_gui.blueprint.global_position = get_viewport_transform() * map_to_local(cell_source)
+	
 	var is_close_to_player := (
 		get_global_mouse_position().distance_to(_player.global_position)
 		< MAXIMUM_WORK_DISTANCE
 	)
-
+	
 	var is_on_ground: bool = _ground.get_cell_source_id(cell_source) == 0
 	var cell_is_occupied := _tracker.is_cell_occupied(cell_source)
-
+	
 	if not cell_is_occupied and is_close_to_player and is_on_ground:
 		_gui.blueprint.modulate = Color.WHITE
 	else:

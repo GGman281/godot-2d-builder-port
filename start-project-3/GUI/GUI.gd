@@ -110,7 +110,7 @@ func _claim_quickbar() -> void:
 func _simulate_input(panel: InventoryPanel) -> void:
 	var input := InputEventMouseButton.new()
 	input.button_index = MOUSE_BUTTON_LEFT
-	input.button_pressed = true
+	input.pressed = true
 	
 	panel._gui_input(input)
 
