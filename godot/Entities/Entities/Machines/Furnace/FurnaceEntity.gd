@@ -4,9 +4,9 @@ extends Entity
 var available_fuel := 0.0
 var last_max_fuel := 0.0
 
-onready var gui := $GUIComponent
-onready var work := $WorkComponent
-onready var animation := $AnimationPlayer
+@onready var gui := $GUIComponent
+@onready var work := $WorkComponent
+@onready var animation := $AnimationPlayer
 
 
 func _ready() -> void:
@@ -20,7 +20,7 @@ func get_info() -> String:
 			% [
 				Library.get_entity_name_from(gui.gui.ore),
 				Library.get_entity_name_from(work.current_output),
-				stepify(work.available_work, 0.1)
+				snapped(work.available_work, 0.1)
 			]
 		)
 	else:

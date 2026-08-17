@@ -9,9 +9,9 @@ var ore_container: InventoryBar
 var fuel_container: InventoryBar
 var fuel_bar: ColorRect
 
-onready var output_container := $HBoxContainer/Output
-onready var tween := $Tween
-onready var arrow := $HBoxContainer/GUISprite
+@onready var output_container := $HBoxContainer/Output
+@onready var tween := $Tween
+@onready var arrow := $HBoxContainer/GUISprite
 
 
 func _ready() -> void:
@@ -31,11 +31,11 @@ func work(time: float) -> void:
 func abort() -> void:
 	tween.stop_all()
 	tween.remove_all()
-	arrow.material.set_shader_param("fill_amount", 0)
+	arrow.material.set_shader_parameter("fill_amount", 0)
 
 
 func set_fuel(amount: float) -> void:
-	fuel_bar.material.set_shader_param("fill_amount", amount)
+	fuel_bar.material.set_shader_parameter("fill_amount", amount)
 
 
 func seek(time: float) -> void:
@@ -44,7 +44,7 @@ func seek(time: float) -> void:
 
 
 func _advance_work_time(amount: float) -> void:
-	arrow.material.set_shader_param("fill_amount", amount)
+	arrow.material.set_shader_parameter("fill_amount", amount)
 
 
 func setup(gui: Control) -> void:

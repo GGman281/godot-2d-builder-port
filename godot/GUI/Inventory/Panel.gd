@@ -7,20 +7,20 @@ const DEFAULT_SIZE := Vector2(100, 100)
 
 signal held_item_changed(panel, item)
 
-var held_item: BlueprintEntity setget _set_held_item
+var held_item: BlueprintEntity: set = _set_held_item
 var silent := false
 var gui: Control
 var _filter_list := []
 
-onready var count_label := $Label
+@onready var count_label := $Label
 
 
 func _ready() -> void:
 	var gui_scale: float = ProjectSettings.get_setting("game_gui/gui_scale")
 	var blueprint_size := DEFAULT_SIZE * gui_scale
-	rect_min_size = blueprint_size
-	rect_size = rect_min_size
-	count_label.rect_min_size = rect_min_size
+	custom_minimum_size = blueprint_size
+	size = custom_minimum_size
+	count_label.custom_minimum_size = custom_minimum_size
 
 
 func _gui_input(event: InputEvent) -> void:

@@ -11,7 +11,7 @@ const ERROR_MESSAGES := {
 	6: "Out Of Memory",
 	7: "File Not Found",
 	8: "File Bad Drive",
-	9: "File Bad Path",
+	9: "File Bad Path3D",
 	10: "File No Permission",
 	11: "File Already In Use",
 	12: "File Cant Open",
@@ -66,7 +66,7 @@ func _ready() -> void:
 		else:
 			print_debug("Couldn't open log.txt file! %s" % [ERROR_MESSAGES[result]])
 
-		var _error := connect("tree_exiting", self, "_on_tree_exiting")
+		var _error := connect("tree_exiting", Callable(self, "_on_tree_exiting"))
 
 
 func _notification(what: int) -> void:
@@ -79,11 +79,11 @@ func log_error(error: int, header := "") -> void:
 	if ENABLED:
 		if error != OK:
 			var error_notification := "*****ERROR"
-			if not header.empty():
+			if not header.is_empty():
 				error_notification += " in %s" % header
 			error_notification += "*****"
 
-			var time := OS.get_datetime()
+			var time := Time.get_datetime_dict_from_system()
 			file.store_string(
 				(
 					"%s (%s:%s:%s) %s : %s\n"

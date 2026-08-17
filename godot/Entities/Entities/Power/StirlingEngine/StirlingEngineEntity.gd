@@ -7,11 +7,11 @@ const SHUTDOWN_TIME := 3
 var available_fuel := 0.0
 var last_max_fuel := 0.0
 
-onready var animation_player := $AnimationPlayer
-onready var tween := $Tween
-onready var shaft := $PistonShaft
-onready var power := $PowerSource
-onready var gui := $GUIComponent
+@onready var animation_player := $AnimationPlayer
+@onready var tween := $Tween
+@onready var shaft := $PistonShaft
+@onready var power := $PowerSource
+@onready var gui := $GUIComponent
 
 
 func get_info() -> String:
@@ -23,7 +23,7 @@ func _setup_work() -> void:
 		animation_player.play("Work")
 		tween.interpolate_property(animation_player, "playback_speed", 0, 1, BOOTUP_TIME)
 		tween.interpolate_method(self, "_update_efficiency", 0, 1, BOOTUP_TIME)
-		tween.interpolate_property(shaft, "modulate", Color.white, Color(0.5, 1, 0.5), BOOTUP_TIME)
+		tween.interpolate_property(shaft, "modulate", Color.WHITE, Color(0.5, 1, 0.5), BOOTUP_TIME)
 		tween.start()
 		_consume_fuel(0.0)
 	elif (
@@ -35,7 +35,7 @@ func _setup_work() -> void:
 			animation_player.current_animation
 		)
 		work_animation.loop = false
-		yield(animation_player, "animation_finished")
+		await animation_player.animation_finished
 		work_animation.loop = true
 
 		animation_player.play("Shutdown")

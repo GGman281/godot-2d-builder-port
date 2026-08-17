@@ -9,22 +9,22 @@ signal gui_opened
 signal gui_closed
 
 var gui: Control
-export var GuiWindow: PackedScene
+@export var GuiWindow: PackedScene
 
 
 func _ready() -> void:
 	assert(GuiWindow, "You must specify the GUIWindow property for a GUI Component")
-	gui = GuiWindow.instance()
+	gui = GuiWindow.instantiate()
 
 	Log.log_error(
-		gui.connect("gui_status_changed", self, "emit_signal", ["gui_status_changed"]),
+		gui.connect("gui_status_changed", Callable(self, "emit_signal").bind("gui_status_changed")),
 		"GUI Component"
 	)
 	Log.log_error(
-		gui.connect("gui_opened", self, "emit_signal", ["gui_opened"]), "GUI Component"
+		gui.connect("gui_opened", Callable(self, "emit_signal").bind("gui_opened")), "GUI Component"
 	)
 	Log.log_error(
-		gui.connect("gui_closed", self, "emit_signal", ["gui_closed"]), "GUI Component"
+		gui.connect("gui_closed", Callable(self, "emit_signal").bind("gui_closed")), "GUI Component"
 	)
 
 
@@ -32,7 +32,7 @@ func get_inventory_bars() -> Array:
 	var output := []
 	var parent_stack := [gui]
 
-	while not parent_stack.empty():
+	while not parent_stack.is_empty():
 		var current: Node = parent_stack.pop_back()
 
 		if current is InventoryBar:

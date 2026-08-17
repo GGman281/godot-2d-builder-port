@@ -9,7 +9,7 @@ var current_recipe: Dictionary
 var current_output: BlueprintEntity
 var available_work := 0.0
 var work_speed := 0.0
-var is_enabled := false setget _set_is_enabled
+var is_enabled := false: set = _set_is_enabled
 
 
 func setup_work(inputs: Dictionary, recipe_map: Dictionary) -> bool:
@@ -27,7 +27,7 @@ func setup_work(inputs: Dictionary, recipe_map: Dictionary) -> bool:
 
 		if can_craft:
 			current_recipe = recipe_map[output]
-			current_output = Library.blueprints[output].instance()
+			current_output = Library.blueprints[output].instantiate()
 			current_output.stack_count = current_recipe.amount
 			available_work = current_recipe.time
 			return true

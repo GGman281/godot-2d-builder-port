@@ -1,5 +1,5 @@
 class_name Recipes
-extends Reference
+extends RefCounted
 
 const Fuels := {Lumber = 50.0, Coal = 100.0, Branches = 10.0}
 

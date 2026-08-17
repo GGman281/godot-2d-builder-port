@@ -1,6 +1,6 @@
 extends FurnaceEntity
 
-onready var power := $PowerReceiver
+@onready var power := $PowerReceiver
 
 
 func _ready() -> void:

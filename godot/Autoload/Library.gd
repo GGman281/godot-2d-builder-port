@@ -26,7 +26,7 @@ func get_entity_name_from(node: Node) -> String:
 
 
 func is_valid_filter(filters: Array, types: String) -> bool:
-	if filters.empty() or types in filters:
+	if filters.is_empty() or types in filters:
 		return true
 
 	if filters.has("Fuels") and Recipes.Fuels.has(types):
@@ -36,20 +36,20 @@ func is_valid_filter(filters: Array, types: String) -> bool:
 
 
 func _find_entities_in(path: String) -> void:
-	var directory := Directory.new()
+	var directory := DirAccess.new()
 	var error := directory.open(path)
 
 	if error != OK:
 		Log.log_error(error, "Library")
 		return
 
-	error = directory.list_dir_begin(true, true)
+	error = directory.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 	if error != OK:
 		Log.log_error(error, "Library")
 		return
 
 	var filename := directory.get_next()
-	while not filename.empty():
+	while not filename.is_empty():
 		if directory.current_is_dir():
 			_find_entities_in("%s/%s" % [directory.get_current_dir(), filename])
 		else:

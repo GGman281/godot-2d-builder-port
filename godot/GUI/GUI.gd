@@ -13,21 +13,21 @@ const QUICKBAR_ACTIONS := [
 	"quickbar_0"
 ]
 
-export var debug_items := {}
+@export var debug_items := {}
 
-var blueprint: BlueprintEntity setget _set_blueprint, _get_blueprint
+var blueprint: BlueprintEntity: get = _get_blueprint, set = _set_blueprint
 var is_open := false
 var _open_gui: Control
 var mouse_in_gui := false
 
-onready var player_inventory := $HBoxContainer/InventoryWindow
-onready var crafting_window := $HBoxContainer/CraftingGUI
-onready var quickbar_container := $MarginContainer/MarginContainer
-onready var quickbar := $MarginContainer/MarginContainer/Quickbar
-onready var _drag_preview := $DragPreview
-onready var info_gui := $InfoGUI
-onready var deconstruct_bar := $DeconstructProgressBar
-onready var _gui_rect := $HBoxContainer
+@onready var player_inventory := $HBoxContainer/InventoryWindow
+@onready var crafting_window := $HBoxContainer/CraftingGUI
+@onready var quickbar_container := $MarginContainer/MarginContainer
+@onready var quickbar := $MarginContainer/MarginContainer/Quickbar
+@onready var _drag_preview := $DragPreview
+@onready var info_gui := $InfoGUI
+@onready var deconstruct_bar := $DeconstructProgressBar
+@onready var _gui_rect := $HBoxContainer
 
 
 func _ready() -> void:
@@ -35,7 +35,7 @@ func _ready() -> void:
 	quickbar.setup(self)
 	crafting_window.setup(self)
 	Log.log_error(
-		Events.connect("entered_pickup_area", self, "_on_Player_entered_pickup_area"), "GUI"
+		Events.connect("entered_pickup_area", Callable(self, "_on_Player_entered_pickup_area")), "GUI"
 	)
 
 	# ----- Temp Debug system -----
@@ -94,7 +94,7 @@ func find_inventory_bars_in(component: GUIComponent) -> Array:
 	var output := []
 	var parent_stack := [component.gui]
 
-	while not parent_stack.empty():
+	while not parent_stack.is_empty():
 		var current: Node = parent_stack.pop_back()
 
 		if current is InventoryBar:
@@ -107,7 +107,7 @@ func find_inventory_bars_in(component: GUIComponent) -> Array:
 
 func is_in_inventory(item_id: String, amount: int) -> bool:
 	var existing_stacks := find_panels_with(item_id)
-	if existing_stacks.empty():
+	if existing_stacks.is_empty():
 		return false
 
 	var total := 0
@@ -172,8 +172,8 @@ func _close_inventories() -> void:
 
 func _simulate_input(panel: InventoryPanel) -> void:
 	var input := InputEventMouseButton.new()
-	input.button_index = BUTTON_LEFT
-	input.pressed = true
+	input.button_index = MOUSE_BUTTON_LEFT
+	input.button_pressed = true
 	panel._gui_input(input)
 
 
@@ -184,7 +184,7 @@ func _claim_quickbar() -> void:
 
 func _set_blueprint(value: BlueprintEntity) -> void:
 	if not is_inside_tree():
-		yield(self, "ready")
+		await self.ready
 	_drag_preview.blueprint = value
 
 
@@ -192,7 +192,7 @@ func _get_blueprint() -> BlueprintEntity:
 	return _drag_preview.blueprint
 
 
-func _on_Player_entered_pickup_area(entity: GroundEntity, player: KinematicBody2D) -> void:
+func _on_Player_entered_pickup_area(entity: GroundEntity, player: CharacterBody2D) -> void:
 	if entity and entity.blueprint:
 		var amount := entity.blueprint.stack_count
 		if add_to_inventory(entity.blueprint):

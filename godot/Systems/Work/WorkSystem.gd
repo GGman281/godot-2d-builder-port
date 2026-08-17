@@ -1,13 +1,13 @@
 class_name WorkSystem
-extends Reference
+extends RefCounted
 
 var workers := {}
 
 
 func _init() -> void:
-	Log.log_error(Events.connect("entity_placed", self, "_on_entity_placed"), "Work System")
-	Log.log_error(Events.connect("entity_removed", self, "_on_entity_removed"), "Work System")
-	Log.log_error(Events.connect("systems_ticked", self, "_on_systems_ticked"), "Work System")
+	Log.log_error(Events.connect("entity_placed", Callable(self, "_on_entity_placed")), "Work System")
+	Log.log_error(Events.connect("entity_removed", Callable(self, "_on_entity_removed")), "Work System")
+	Log.log_error(Events.connect("systems_ticked", Callable(self, "_on_systems_ticked")), "Work System")
 
 
 func _on_systems_ticked(delta: float) -> void:

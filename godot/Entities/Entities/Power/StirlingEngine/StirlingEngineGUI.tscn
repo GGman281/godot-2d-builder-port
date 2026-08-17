@@ -20,37 +20,37 @@ shader = SubResource( 1 )
 shader_param/fill_amount = 0.0
 
 [node name="StirlingEngineGUI" type="MarginContainer"]
-margin_right = 19.0
-margin_bottom = 10.0
+offset_right = 19.0
+offset_bottom = 10.0
 size_flags_horizontal = 4
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_bottom = 5
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 14.0
-margin_bottom = 5.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 14.0
+offset_bottom = 5.0
 
 [node name="ColorRect" type="ColorRect" parent="HBoxContainer"]
 modulate = Color( 0.188235, 0.462745, 1, 1 )
 material = SubResource( 2 )
-margin_right = 5.0
-rect_min_size = Vector2( 5, 0 )
+offset_right = 5.0
+custom_minimum_size = Vector2( 5, 0 )
 size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="FuelBar" parent="HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 9.0
-margin_right = 9.0
+offset_left = 9.0
+offset_right = 9.0
 slot_count = 1
 item_filters = "Fuels"
 [connection signal="inventory_changed" from="HBoxContainer/FuelBar" to="." method="_on_FuelBar_inventory_changed"]

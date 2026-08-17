@@ -4,7 +4,7 @@ const CraftingItem := preload("CraftingRecipeItem.tscn")
 
 var gui: Control
 
-onready var items := $PanelContainer/CraftingList/ScrollContainer/VBoxContainer
+@onready var items := $PanelContainer/CraftingList/ScrollContainer/VBoxContainer
 
 
 func setup(_gui: Control) -> void:
@@ -27,18 +27,18 @@ func update_recipes() -> void:
 		if not can_craft:
 			continue
 
-		var temp: BlueprintEntity = Library.blueprints[output].instance()
+		var temp: BlueprintEntity = Library.blueprints[output].instantiate()
 
-		var item := CraftingItem.instance()
+		var item := CraftingItem.instantiate()
 		items.add_child(item)
-		var sprite: Sprite = temp.get_node("Sprite")
+		var sprite: Sprite2D = temp.get_node("Sprite2D")
 		item.setup(
 			Library.get_entity_name_from(temp),
 			sprite.texture,
 			sprite.region_enabled,
 			sprite.region_rect
 		)
-		Log.log_error(item.connect("recipe_activated", self, "_on_recipe_activated"), "CraftingGUI")
+		Log.log_error(item.connect("recipe_activated", Callable(self, "_on_recipe_activated")), "CraftingGUI")
 		temp.free()
 
 
@@ -64,7 +64,7 @@ func _on_recipe_activated(recipe: Dictionary, output: String) -> void:
 			if count == 0:
 				break
 
-	var item: BlueprintEntity = Library.blueprints[output].instance()
+	var item: BlueprintEntity = Library.blueprints[output].instantiate()
 	item.stack_count = recipe.amount
 
 	if not gui.add_to_inventory(item):

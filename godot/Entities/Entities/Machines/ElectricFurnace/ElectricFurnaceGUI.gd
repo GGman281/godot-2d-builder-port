@@ -4,7 +4,7 @@ extends FurnaceGUI
 
 func update_speed(speed: float) -> void:
 	if not is_inside_tree():
-		yield(self, "ready")
+		await self.ready
 
 	tween.playback_speed = speed
 
