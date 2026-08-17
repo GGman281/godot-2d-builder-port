@@ -10,13 +10,13 @@ var fuel_container: InventoryBar
 var fuel_bar: ColorRect
 
 @onready var output_container := $HBoxContainer/Output
-@onready var tween := $Tween
+@onready var tween := create_tween()
 @onready var arrow := $HBoxContainer/GUISprite
 
 
 func _ready() -> void:
-	var scale: float = ProjectSettings.get_setting("game_gui/gui_scale")
-	arrow.scale = Vector2(scale, scale)
+	var _scale: float = ProjectSettings.get_setting("game_gui/gui_scale")
+	arrow._scale = Vector2(scale)
 	
 	_find_nodes()
 

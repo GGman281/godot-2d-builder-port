@@ -1,7 +1,7 @@
-# TileMap that handles placing, hovering over, and interacting with entities and
+# TileMapLayer that handles placing, hovering over, and interacting with entities and
 # blueprints in the world based on user input.
 class_name EntityPlacer
-extends TileMap
+extends TileMapLayer
 
 # Distance from the player when the mouse stops being able to place/interact
 const MAXIMUM_WORK_DISTANCE := 275.0
@@ -18,14 +18,14 @@ var _gui: Control
 var _last_hovered: Node2D = null
 var _tracker: EntityTracker
 var _player: CharacterBody2D
-# Tilemap that lives in a layer below the player so it can walk over them.
+# TileMapLayer that lives in a layer below the player so it can walk over them.
 var _flat_entities: Node2D
-var _current_deconstruct_location := Vector2.ZERO
-# Tilemap for the ground. Ensures things cannot be placed on anything but the ground map.
-var _ground: TileMap
+var _current_deconstruct_location := Vector2i.ZERO
+# TileMapLayer for the ground. Ensures things cannot be placed on anything but the ground map.
+var _ground: TileMapLayer
 
 @onready var _deconstruct_timer := $Timer
-@onready var _deconstruct_tween := $Tween
+@onready var _deconstruct_tween := create_tween()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -41,9 +41,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		< MAXIMUM_WORK_DISTANCE
 	)
 
-	var cellv := local_to_map(global_mouse_position)
+	var cellv := local_to_map(get_local_mouse_position())
 	var cell_is_occupied := _tracker.is_cell_occupied(cellv)
-	var is_on_ground := _ground.get_cellv(cellv) == 0
+	var is_on_ground := _ground.get_cell_atlas_coords(cellv) == Vector2i.ZERO
 
 	if event.is_action_pressed("left_click"):
 		if has_placeable_blueprint:
@@ -95,7 +95,7 @@ func setup(
 	tracker: EntityTracker,
 	flat_entities: Node2D,
 	gui: Control,
-	ground: TileMap,
+	ground: TileMapLayer,
 	player: CharacterBody2D
 ) -> void:
 	_gui = gui
@@ -124,16 +124,14 @@ func _replace_pipe(pipe: Node2D, directions: int) -> void:
 func _move_blueprint_in_world(cellv: Vector2) -> void:
 	_gui.blueprint.make_world()
 
-	_gui.blueprint.global_position = get_viewport_transform().xform(
-		map_to_local(cellv) + POSITION_OFFSET
-	)
+	_gui.blueprint.global_position = get_viewport_transform() * (map_to_local(cellv) + POSITION_OFFSET)
 
 	var is_close_to_player := (
 		get_global_mouse_position().distance_to(_player.global_position)
 		< MAXIMUM_WORK_DISTANCE
 	)
 
-	var is_on_ground: bool = _ground.get_cellv(cellv) == 0
+	var is_on_ground: bool = _ground.get_cell_source_id(cellv) == 0
 
 	var cell_is_occupied := _tracker.is_cell_occupied(cellv)
 
@@ -236,7 +234,7 @@ func _deconstruct(event_position: Vector2, cellv: Vector2) -> void:
 	)
 	deconstruct_bar.show()
 
-	var modifier := 1.0 if not blueprint is ToolEntity else 1.0 / blueprint.tool_speed
+	var modifier:float = 1.0 if not blueprint is ToolEntity else 1.0 / blueprint.tool_speed
 
 	_deconstruct_tween.interpolate_property(
 		deconstruct_bar, "value", 0, 100, DECONSTRUCT_TIME * modifier
@@ -245,7 +243,7 @@ func _deconstruct(event_position: Vector2, cellv: Vector2) -> void:
 
 	Log.log_error(
 		_deconstruct_timer.connect(
-			"timeout", self, "_finish_deconstruct", [cellv], CONNECT_ONE_SHOT
+			"timeout", _finish_deconstruct.bind([cellv]), CONNECT_ONE_SHOT
 		),
 		"Entity Placer"
 	)

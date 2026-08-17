@@ -17,7 +17,7 @@ func get_entity_name_from(node: Node) -> String:
 	if node:
 		if node.has_method("get_entity_name"):
 			return node.get_entity_name()
-		var filename := node.filename.substr(node.filename.rfind("/") + 1).replace(BLUEPRINT, "").replace(
+		var filename := node.scene_file_path.substr(node.scene_file_path.rfind("/") + 1).replace(BLUEPRINT, "").replace(
 			ENTITY, ""
 		)
 
@@ -36,8 +36,8 @@ func is_valid_filter(filters: Array, types: String) -> bool:
 
 
 func _find_entities_in(path: String) -> void:
-	var directory := DirAccess.new()
-	var error := directory.open(path)
+	var directory:DirAccess = DirAccess.open(path)
+	var error := DirAccess.get_open_error()
 
 	if error != OK:
 		Log.log_error(error, "Library")

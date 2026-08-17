@@ -31,8 +31,8 @@ func _gui_input(event: InputEvent) -> void:
 		set(PATH_TO_CUSTOM_PANEL, bright_style)
 
 
-func setup(name: String, texture: Texture2D, uses_region_rect: bool, region_rect: Rect2) -> void:
-	recipe_name.recipe_name = name
+func setup(_name: String, texture: Texture2D, uses_region_rect: bool, region_rect: Rect2) -> void:
+	recipe_name.recipe_name = _name
 	sprite.texture = texture
 	sprite.region_enabled = uses_region_rect
 	sprite.region_rect = region_rect

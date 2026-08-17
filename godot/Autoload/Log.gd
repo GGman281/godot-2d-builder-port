@@ -52,13 +52,12 @@ const ERROR_MESSAGES := {
 	47: "Bug"
 }
 
-var file: File
+var file: FileAccess = FileAccess.open("res://log.txt", FileAccess.WRITE_READ)
 
 
 func _ready() -> void:
 	if ENABLED:
-		file = File.new()
-		var result := file.open("res://log.txt", File.WRITE_READ)
+		var result := file.get_error()
 
 		if result == OK:
 			file.seek_end()
@@ -66,7 +65,7 @@ func _ready() -> void:
 		else:
 			print_debug("Couldn't open log.txt file! %s" % [ERROR_MESSAGES[result]])
 
-		var _error := connect("tree_exiting", Callable(self, "_on_tree_exiting"))
+		var _error := connect("tree_exiting", _on_tree_exiting)
 
 
 func _notification(what: int) -> void:

@@ -44,7 +44,7 @@ func _ready() -> void:
 		if not Library.blueprints.has(item):
 			continue
 
-		var item_instance: Node = Library.blueprints[item].instance()
+		var item_instance: Node = Library.blueprints[item].instantiate()
 		item_instance.stack_count = min(item_instance.stack_size, debug_items[item])
 		if not add_to_inventory(item_instance):
 			item_instance.queue_free()
@@ -66,7 +66,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				break
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var mouse_position := get_global_mouse_position()
 	mouse_in_gui = is_open and _gui_rect.get_rect().has_point(mouse_position)
 
@@ -173,7 +173,7 @@ func _close_inventories() -> void:
 func _simulate_input(panel: InventoryPanel) -> void:
 	var input := InputEventMouseButton.new()
 	input.button_index = MOUSE_BUTTON_LEFT
-	input.button_pressed = true
+	input.pressed = true
 	panel._gui_input(input)
 
 

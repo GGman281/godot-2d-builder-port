@@ -1,17 +1,17 @@
 [gd_scene format=3 uid="uid://cj7li8im3mfa6"]
 
-[ext_resource type="TileSet" path="res://Shared/Tileset.tres" id="1"]
-[ext_resource type="PackedScene" path="res://Entities/Player/Player.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Machines/ElectricFurnace/ElectricFurnaceEntity.tscn" id="3"]
+[ext_resource type="TileSet" uid="uid://csj6q335h6cvm" path="res://Shared/Tileset.tres" id="1"]
+[ext_resource type="PackedScene" uid="uid://cww3iencmshep" path="res://Entities/Player/Player.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://c1v0j1w4faned" path="res://Entities/Entities/Machines/ElectricFurnace/ElectricFurnaceEntity.tscn" id="3"]
 [ext_resource type="Script" uid="uid://mkw8nk32i45y" path="res://Systems/Simulation.gd" id="4"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Natural/Tree/TreeEntity.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Natural/Boulder/BoulderEntity.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://83iprmc0f0u5" path="res://Entities/Entities/Natural/Tree/TreeEntity.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://nbfu2yk68tct" path="res://Entities/Entities/Natural/Boulder/BoulderEntity.tscn" id="6"]
 [ext_resource type="Script" uid="uid://cwavdnsmbyhkx" path="res://Systems/EntityPlacer.gd" id="7"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Natural/Ore/OreEntity.tscn" id="8"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Chest/ChestEntity.tscn" id="9"]
-[ext_resource type="PackedScene" path="res://GUI/GUI.tscn" id="10"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Natural/Stone/StoneEntity.tscn" id="11"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Natural/Branches/BranchesEntity.tscn" id="12"]
+[ext_resource type="PackedScene" uid="uid://b3k4p5dv0xypa" path="res://Entities/Entities/Natural/Ore/OreEntity.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://c272ewxxrjl2a" path="res://Entities/Entities/Chest/ChestEntity.tscn" id="9"]
+[ext_resource type="PackedScene" uid="uid://cvrgn3csjdwsm" path="res://GUI/GUI.tscn" id="10"]
+[ext_resource type="PackedScene" uid="uid://bvakmur04dgl2" path="res://Entities/Entities/Natural/Stone/StoneEntity.tscn" id="11"]
+[ext_resource type="PackedScene" uid="uid://d03fd68cghuf2" path="res://Entities/Entities/Natural/Branches/BranchesEntity.tscn" id="12"]
 [ext_resource type="Environment" uid="uid://bogdv0ii0ctxq" path="res://default_env.tres" id="14"]
 
 [node name="Simulation" type="Node" unique_id=315055650]
@@ -19,9 +19,8 @@ script = ExtResource("4")
 
 [node name="GameWorld" type="Node2D" parent="." unique_id=2068493459]
 
-[node name="Ground" type="TileMap" parent="GameWorld" unique_id=418031116]
+[node name="Ground" type="TileMapLayer" parent="GameWorld" unique_id=698226922]
 tile_set = ExtResource("1")
-format = 2
 
 [node name="FlatEntities" type="Node2D" parent="GameWorld" unique_id=1983787294]
 
@@ -48,8 +47,7 @@ position = Vector2(1357.61, 899.984)
 
 [node name="Node2D" type="Node2D" parent="GameWorld" unique_id=1955487638]
 
-[node name="EntityPlacer" type="TileMap" parent="GameWorld/Node2D" unique_id=1525588386]
-format = 2
+[node name="EntityPlacer" type="TileMapLayer" parent="GameWorld/Node2D" unique_id=273675069]
 script = ExtResource("7")
 
 [node name="Timer" type="Timer" parent="GameWorld/Node2D/EntityPlacer" unique_id=737015632]
@@ -151,7 +149,6 @@ wait_time = 0.033
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1534967321]
 
 [node name="GUI" parent="CanvasLayer" unique_id=1972442640 instance=ExtResource("10")]
-anchors_preset = 15
 debug_items = {
 "Battery": 2,
 "Branches": 100,

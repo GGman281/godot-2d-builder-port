@@ -6,7 +6,7 @@ extends Control
 
 @export var region_enabled: bool = false: set = _set_region_enabled
 @export var region_rect: Rect2 = Rect2(): set = _set_region_rect
-@export var scale := Vector2.ONE: set = _set_scale
+@export var scale_size := Vector2.ONE: set = _set_scale
 
 
 func _draw() -> void:
@@ -47,4 +47,4 @@ func _update_region() -> void:
 			custom_minimum_size = texture.get_size() * scale
 		else:
 			custom_minimum_size = Vector2.ZERO
-	update()
+	queue_redraw()

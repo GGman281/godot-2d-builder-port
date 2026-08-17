@@ -8,7 +8,7 @@ var available_fuel := 0.0
 var last_max_fuel := 0.0
 
 @onready var animation_player := $AnimationPlayer
-@onready var tween := $Tween
+@onready var tween := create_tween()
 @onready var shaft := $PistonShaft
 @onready var power := $PowerSource
 @onready var gui := $GUIComponent

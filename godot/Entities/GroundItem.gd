@@ -6,7 +6,7 @@ var blueprint: BlueprintEntity
 @onready var collision_shape := $Area2D/CollisionShape2D
 @onready var animation := $AnimationPlayer
 @onready var sprite := $Sprite2D
-@onready var tween := $Tween
+@onready var tween := create_tween()
 
 
 func setup(_blueprint: BlueprintEntity, location: Vector2) -> void:
