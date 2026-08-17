@@ -24,8 +24,10 @@ tile_map_data = PackedByteArray("AAD+/w0AAQAEAAIAAAD//w0AAQAEAAIAAAAAAA0AAQAEAAI
 tile_set = ExtResource("1")
 
 [node name="FlatEntities" type="Node2D" parent="GameWorld" unique_id=1676040729]
+y_sort_enabled = true
 
 [node name="Node2D" type="Node2D" parent="GameWorld" unique_id=915843000]
+y_sort_enabled = true
 
 [node name="EntityPlacer" type="TileMapLayer" parent="GameWorld/Node2D" unique_id=911969689]
 y_sort_enabled = true
@@ -76,7 +78,8 @@ grow_horizontal = 2
 grow_vertical = 2
 debug_items = {
 "Battery": 4,
-"StirlingEngine": 4
+"StirlingEngine": 4,
+"Wire": 10
 }
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -23,6 +23,7 @@ config/icon="res://icon.png"
 
 Events="*res://Autoload/Events.gd"
 Library="*res://Autoload/Library.gd"
+PowerSystem="*uid://dmk3naxdtqy1n"
 
 [display]
 

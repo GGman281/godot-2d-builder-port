@@ -5,14 +5,14 @@ const BARRIER_ID := 1
 # Atlas source ID
 const INVISIBLE_BARRIER_SOURCE_ID := 2
 
-# Will only change if resized atlas 
+# Will only change if resized atlas
 const INVISIBLE_BARRIER_POSITION_IN_ATLAS := Vector2i(5, 2)
 
 @export var simulation_speed := 1.0 / 30.0
 
 var _tracker := EntityTracker.new()
 
-#@onready var _power_system := PowerSystem.new()
+
 @onready var _ground := $GameWorld/GroundTiles
 @onready var _entity_placer := $GameWorld/Node2D/EntityPlacer
 @onready var _player := $GameWorld/Node2D/Player

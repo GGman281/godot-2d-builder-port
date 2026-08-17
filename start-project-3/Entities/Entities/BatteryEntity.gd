@@ -1,7 +1,7 @@
 extends Entity
-
 @export var max_storage := 1000.0
 
+# constructor to cycle the _set_stored_power
 var stored_power := 0.0: set = _set_stored_power
 
 @onready var receiver := $PowerReceiver
@@ -22,18 +22,20 @@ func _setup(blueprint: BlueprintEntity) -> void:
 	receiver.input_direction = 15 ^ source.output_direction
 
 
+# indicator update and efficiency controller
+# infinitely cycled through constructor on the line 5
 func _set_stored_power(value: float) -> void:
+	
 	stored_power = max(value, 0)
-
 	if not is_inside_tree():
 		await self.ready
-
+	
 	receiver.efficiency = (
 		0.0
 		if stored_power >= max_storage
 		else min((max_storage - stored_power) / receiver.power_required, 1.0)
 	)
-
+	
 	source.efficiency = (0.0 if stored_power <= 0 else min(stored_power / source.power_amount, 1.0))
 	
 	indicator.material.set_shader_parameter("amount", stored_power / max_storage)

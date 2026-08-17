@@ -136,13 +136,14 @@ func _move_blueprint_in_world(cell_source: Vector2) -> void:
 		_gui.blueprint.modulate = Color.RED
 	
 	if _gui.blueprint is WireBlueprint:
-		WireBlueprint.set_sprite_for_direction(_gui.blueprint.sprite, _get_powered_neighbors(cell_source))
+		WireBlueprint.set_sprite_for_direction(_gui.blueprint.get_node("Sprite2D"), _get_powered_neighbors(cell_source))
 
 
 func _deconstruct(_event_position: Vector2, cell_source: Vector2) -> void:
 	_deconstruct_timer.connect(
-		"timeout", _finish_deconstruct, CONNECT_ONE_SHOT
+		"timeout", _finish_deconstruct.bind(cell_source), CONNECT_ONE_SHOT,
 	)
+	
 	_deconstruct_timer.start(DECONSTRUCT_TIME)
 	_current_deconstruct_location = cell_source
 
@@ -152,7 +153,6 @@ func _finish_deconstruct(cell_source: Vector2) -> void:
 	
 	var entity_name := Library.get_entity_name_from(entity)
 	var location := map_to_local(cell_source)
-	
 	if Library.blueprints.has(entity_name):
 		var Blueprint: PackedScene = Library.blueprints[entity_name]
 
@@ -170,8 +170,8 @@ func _drop_entity(entity: BlueprintEntity, location: Vector2) -> void:
 
 
 func _abort_deconstruct() -> void:
-	if _deconstruct_timer.is_connected("timeout", Callable(self, "_finish_deconstruct")):
-		_deconstruct_timer.disconnect("timeout", Callable(self, "_finish_deconstruct"))
+	if _deconstruct_timer.is_connected("timeout", _finish_deconstruct):
+		_deconstruct_timer.disconnect("timeout", _finish_deconstruct)
 	_deconstruct_timer.stop()
 
 

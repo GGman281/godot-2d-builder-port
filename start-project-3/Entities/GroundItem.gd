@@ -6,7 +6,7 @@ var blueprint: BlueprintEntity
 @onready var collision_shape := $Area2D/CollisionShape2D
 @onready var animation := $AnimationPlayer
 @onready var sprite := $Sprite2D
-@onready var tween := $Tween
+@onready var tween := create_tween()
 
 
 func setup(_blueprint: BlueprintEntity, location: Vector2) -> void:
@@ -36,7 +36,7 @@ func do_pickup(target: CharacterBody2D) -> void:
 		global_position = global_position.move_toward(target.global_position, travel_distance)
 		travel_distance += 0.1
 		
-		await get_tree().idle_frame
+		await get_tree().process_frame
 
 	queue_free()
 
@@ -51,19 +51,20 @@ func _pop() -> void:
 	
 	var height_position := global_position + direction * Vector2(0.5, 2 * -sign(direction.y))
 
-	tween.interpolate_property(
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
 		self,
 		"global_position",
-		global_position,
 		height_position,
 		0.15,
-		Tween.TRANS_SINE,
-		Tween.EASE_OUT
 	)
-	tween.interpolate_property(
-		self, "global_position", height_position, target_position, 0.25, 0, Tween.EASE_IN, 0.15
-	)
-	tween.start()
 	
-	await tween.tween_all_completed
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.set_ease(Tween.EASE_IN)
+	tween.tween_property(
+		self, "global_position", target_position, 0.25 #delay: 0.15
+	)
+	
+	await tween.finished
 	animation.play("Float")

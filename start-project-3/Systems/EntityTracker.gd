@@ -3,13 +3,13 @@
 class_name EntityTracker
 extends RefCounted
 
-## A Dictionary of entities, keyed using Vector2 tile map coordinates
+## A Dictionary of entities, keyed using Vector2 tile map layer coordinates
 var entities := {}
 
 func place_entity(entity, cellv: Vector2) -> void:
 	if entities.has(cellv):
 		return
-
+	
 	entities[cellv] = entity
 	Events.emit_signal("entity_placed", entity, cellv)
 

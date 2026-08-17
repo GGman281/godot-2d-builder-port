@@ -37,7 +37,7 @@ void fragment() {
 resource_local_to_scene = true
 shader = SubResource("1")
 shader_parameter/amount = 0.0
-shader_parameter/MODULATE = Color(0, 0, 0, 1)
+shader_parameter/MODULATE = Color(1, 0, 0, 1)
 
 [node name="BatteryEntity" type="StaticBody2D" unique_id=1765243399 groups=["power_receivers", "power_sources"]]
 script = ExtResource("4")
