@@ -9,26 +9,31 @@ var gui: Control
 
 func setup(_gui: Control) -> void:
 	gui = _gui
+	var gui_scale: float = ProjectSettings.get_setting("game_gui/gui_scale") 
+	self.custom_minimum_size = Vector2(400, 0) * gui_scale
+
 
 
 func update_recipes() -> void:
+	# delete everything there was before
 	for child in items.get_children():
 		child.queue_free()
 
+	
 	for output in Recipes.Crafting.keys():
 		var recipe: Dictionary = Recipes.Crafting[output]
-
+		
 		var can_craft := true
-		for input in recipe.inputs.keys():
-			if not gui.is_in_inventory(input, recipe.inputs[input]):
+		for input in recipe.inputs.keys(): # get all the necessary types of recourses
+			if not gui.is_in_inventory(input, recipe.inputs[input]): # type, requiredAmount
 				can_craft = false
 				break
-
+		
 		if not can_craft:
 			continue
-
+		
 		var temp: BlueprintEntity = Library.blueprints[output].instantiate()
-
+		
 		var item := CraftingItem.instantiate()
 		items.add_child(item)
 		var sprite: Sprite2D = temp.get_node("Sprite2D")

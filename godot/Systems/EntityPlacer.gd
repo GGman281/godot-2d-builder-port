@@ -5,9 +5,12 @@ extends TileMapLayer
 
 # Distance from the player when the mouse stops being able to place/interact
 const MAXIMUM_WORK_DISTANCE := 275.0
+## No longer requred after setting up TileMapEntity
 # Offset in pixels. Used for blueprints to be properly positioned in world space
 # VS their usual position in inventory space.
-const POSITION_OFFSET := Vector2(0, 25)
+# const POSITION_OFFSET := Vector2(0, 25)
+##
+
 # Base time in seconds it takes to deconstruct an item.
 const DECONSTRUCT_TIME := 0.3
 # The type of entity that is dropped when an item is deconstructed.
@@ -25,7 +28,6 @@ var _current_deconstruct_location := Vector2i.ZERO
 var _ground: TileMapLayer
 
 @onready var _deconstruct_timer := $Timer
-@onready var _deconstruct_tween := create_tween()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -41,34 +43,34 @@ func _unhandled_input(event: InputEvent) -> void:
 		< MAXIMUM_WORK_DISTANCE
 	)
 
-	var cellv := local_to_map(get_local_mouse_position())
-	var cell_is_occupied := _tracker.is_cell_occupied(cellv)
-	var is_on_ground := _ground.get_cell_atlas_coords(cellv) == Vector2i.ZERO
+	var mouses_cell_position:Vector2i = local_to_map(get_local_mouse_position())
+	var cell_is_occupied := _tracker.is_cell_occupied(mouses_cell_position)
+	var is_on_ground := _ground.get_cell_source_id(mouses_cell_position) == 0
 
 	if event.is_action_pressed("left_click"):
 		if has_placeable_blueprint:
 			if not cell_is_occupied and is_close_to_player and is_on_ground:
-				_place_entity(cellv)
-				_update_neighboring_flat_entities(cellv)
+				_place_entity(mouses_cell_position)
+				_update_neighboring_flat_entities(mouses_cell_position)
 
 		elif cell_is_occupied and is_close_to_player:
-			var entity := _tracker.get_entity_at(cellv)
+			var entity := _tracker.get_entity_at(mouses_cell_position)
 			if entity and entity.is_in_group(Types.GUI_ENTITIES):
 				_gui.open_entity_gui(entity)
 				_clear_hover_entity()
 
 	elif event.is_action_pressed("right_click") and not has_placeable_blueprint:
 		if cell_is_occupied and is_close_to_player:
-			_deconstruct(global_mouse_position, cellv)
+			_deconstruct(global_mouse_position, mouses_cell_position)
 
 	elif event is InputEventMouseMotion:
-		if cellv != _current_deconstruct_location:
+		if mouses_cell_position != _current_deconstruct_location:
 			_abort_deconstruct()
 
 		if has_placeable_blueprint:
-			_move_blueprint_in_world(cellv)
+			_move_blueprint_in_world(mouses_cell_position)
 		else:
-			_update_hover(cellv)
+			_update_hover(mouses_cell_position)
 
 	elif event.is_action_pressed("rotate_blueprint") and has_placeable_blueprint:
 		blueprint.rotate_blueprint()
@@ -124,7 +126,7 @@ func _replace_pipe(pipe: Node2D, directions: int) -> void:
 func _move_blueprint_in_world(cellv: Vector2) -> void:
 	_gui.blueprint.make_world()
 
-	_gui.blueprint.global_position = get_viewport_transform() * (map_to_local(cellv) + POSITION_OFFSET)
+	_gui.blueprint.global_position = get_viewport_transform() * (map_to_local(cellv))
 
 	var is_close_to_player := (
 		get_global_mouse_position().distance_to(_player.global_position)
@@ -186,7 +188,7 @@ func _place_entity(cellv: Vector2) -> void:
 	else:
 		add_child(new_entity)
 
-	new_entity.global_position = map_to_local(cellv) + POSITION_OFFSET
+	new_entity.global_position = map_to_local(cellv)
 
 	new_entity._setup(blueprint)
 
@@ -200,7 +202,8 @@ func _place_entity(cellv: Vector2) -> void:
 
 
 func _drop_entity(entity: BlueprintEntity, location: Vector2) -> void:
-	assert(GroundEntityScene, "Must define a ground entity scene to drop items.")
+# causes GDScript::reload: Assert statement is redundant because the expression is always true.
+#	assert(GroundEntityScene, "Must define a ground entity scene to drop items.")
 
 	if entity.get_parent():
 		entity.get_parent().remove_child(entity)
@@ -230,20 +233,19 @@ func _deconstruct(event_position: Vector2, cellv: Vector2) -> void:
 
 	deconstruct_bar.global_position = (
 		get_viewport_transform() * (event_position)
-		+ POSITION_OFFSET
 	)
 	deconstruct_bar.show()
 
 	var modifier:float = 1.0 if not blueprint is ToolEntity else 1.0 / blueprint.tool_speed
-
-	_deconstruct_tween.interpolate_property(
-		deconstruct_bar, "value", 0, 100, DECONSTRUCT_TIME * modifier
-	)
-	_deconstruct_tween.start()
+	
+	var _deconstruct_tween := create_tween()
+	_deconstruct_tween.tween_property(
+		deconstruct_bar, "value", 100, DECONSTRUCT_TIME * modifier
+	).from(0)
 
 	Log.log_error(
 		_deconstruct_timer.connect(
-			"timeout", _finish_deconstruct.bind([cellv]), CONNECT_ONE_SHOT
+			"timeout", _finish_deconstruct.bind(cellv), CONNECT_ONE_SHOT
 		),
 		"Entity Placer"
 	)
@@ -324,5 +326,5 @@ func _sample_entity_at(cellv: Vector2) -> void:
 
 	var input := InputEventMouseButton.new()
 	input.button_index = MOUSE_BUTTON_LEFT
-	input.button_pressed = true
+	input.pressed = true
 	inventories_with.front()._gui_input(input)

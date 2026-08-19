@@ -42,6 +42,4 @@ layout_mode = 2
 slot_count = 1
 item_filters = "NIL"
 
-[node name="Tween" type="Tween" parent="." unique_id=1794930289]
-
 [connection signal="inventory_changed" from="HBoxContainer/OreBar" to="." method="_on_OreBar_inventory_changed"]

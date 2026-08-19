@@ -5,11 +5,17 @@ extends Node2D
 
 const DEFAULT_SIZE := 100.0
 
+# signal to handle count change since setter no longer checks for changed values inside recourses 
+# (for panel.gd specifically)
+signal stack_count_changed
 @export var stack_size := 1
 @export var placeable := true
 @export var description := "" # (String, MULTILINE)
 
-var stack_count := 1
+var stack_count := 1: 
+	set(value):
+		stack_count = value
+		self.emit_signal("stack_count_changed")
 
 @onready var _power_direction := find_child("PowerDirection")
 

@@ -28,6 +28,7 @@ func _setup(blueprint: BlueprintEntity) -> void:
 
 # Set efficiency as a source and receiver based on stored amount of power
 func _set_stored_power(value: float) -> void:
+	
 	stored_power = max(value, 0)
 	if not is_inside_tree():
 		await self.ready

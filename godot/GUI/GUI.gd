@@ -35,7 +35,7 @@ func _ready() -> void:
 	quickbar.setup(self)
 	crafting_window.setup(self)
 	Log.log_error(
-		Events.connect("entered_pickup_area", Callable(self, "_on_Player_entered_pickup_area")), "GUI"
+		Events.connect("entered_pickup_area", _on_Player_entered_pickup_area), "GUI"
 	)
 
 	# ----- Temp Debug system -----

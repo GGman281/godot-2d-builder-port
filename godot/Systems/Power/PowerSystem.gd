@@ -112,7 +112,7 @@ func _on_systems_ticked(delta: float) -> void:
 		var available_power := source_power
 		var power_draw := 0.0
 
-		for cell in path.slice(1, path.size() - 1):
+		for cell in path.slice(1, path.size()):
 			if cell == path[0]:
 				continue
 

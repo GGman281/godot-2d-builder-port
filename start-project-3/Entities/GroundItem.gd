@@ -58,13 +58,14 @@ func _pop() -> void:
 		"global_position",
 		height_position,
 		0.15,
-	)
+	).from(global_position)
 	
 	tween.set_trans(Tween.TRANS_LINEAR)
 	tween.set_ease(Tween.EASE_IN)
 	tween.tween_property(
-		self, "global_position", target_position, 0.25 #delay: 0.15
-	)
+		self, "global_position", target_position, 0.25 
+	).from(height_position)
+	await tween.tween_interval(0.15).finished
 	
 	await tween.finished
 	animation.play("Float")

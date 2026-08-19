@@ -1,11 +1,12 @@
 class_name GUIComponent
 extends Node
 
-#warning-ignore: unused_signal
+
+@warning_ignore("unused_signal")
 signal gui_status_changed
-#warning-ignore: unused_signal
+@warning_ignore("unused_signal")
 signal gui_opened
-#warning-ignore: unused_signal
+@warning_ignore("unused_signal")
 signal gui_closed
 
 var gui: Control
@@ -15,7 +16,6 @@ var gui: Control
 func _ready() -> void:
 	assert(GuiWindow, "You must specify the GUIWindow property for a GUI Component")
 	gui = GuiWindow.instantiate()
-
 	Log.log_error(
 		gui.connect("gui_status_changed", Callable(self, "emit_signal").bind("gui_status_changed")),
 		"GUI Component"

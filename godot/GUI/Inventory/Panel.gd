@@ -7,6 +7,8 @@ const DEFAULT_SIZE := Vector2(100, 100)
 
 signal held_item_changed(panel, item)
 
+# setter no longer checks for variable change within the class
+
 var held_item: BlueprintEntity: set = _set_held_item
 var silent := false
 var gui: Control
@@ -21,6 +23,7 @@ func _ready() -> void:
 	custom_minimum_size = blueprint_size
 	size = custom_minimum_size
 	count_label.custom_minimum_size = custom_minimum_size
+
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -76,11 +79,15 @@ func _set_held_item(value: BlueprintEntity) -> void:
 	if is_instance_valid(held_item) and held_item.get_parent() == self:
 		remove_child(held_item)
 	held_item = value
+	if held_item: # update label on count change 
+		if not held_item.is_connected("stack_count_changed", _update_label):
+			held_item.connect("stack_count_changed", _update_label)
 
 	if is_instance_valid(held_item):
 		add_child(held_item)
 		move_child(held_item, 0)
 		held_item.make_inventory()
+	
 	_update_label()
 	emit_signal("held_item_changed", self, held_item)
 
@@ -130,6 +137,7 @@ func _grab_item() -> void:
 	var item: BlueprintEntity = gui.blueprint
 	gui.blueprint = null
 	self.held_item = item
+	
 
 
 func _release_item() -> void:

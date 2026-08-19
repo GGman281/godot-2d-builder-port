@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c818npetbsfqr" path="res://Shared/tileset.svg" id="1"]
 [ext_resource type="Script" uid="uid://b1o6l7lbscm75" path="res://GUI/GUIEntities/GUIComponent.gd" id="2"]
-[ext_resource type="PackedScene" path="res://Entities/Entities/Machines/Furnace/FurnaceGUI.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://du6w17j1p78m8" path="res://Entities/Entities/Machines/Furnace/FurnaceGUI.tscn" id="3"]
 [ext_resource type="Script" uid="uid://bpuroyxjv8ilt" path="res://Entities/Entities/Machines/Furnace/FurnaceEntity.gd" id="4"]
 [ext_resource type="Script" uid="uid://qrah8g4xl207" path="res://Systems/Work/WorkComponent.gd" id="5"]
 

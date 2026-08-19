@@ -8,6 +8,7 @@ const Smelting := {
 	Coal = {inputs = {"Lumber": 1}, amount = 1, time = 5.0}
 }
 
+# CraftingRecipe = {inputs = {what it takes to craft}, amount = int}
 const Crafting := {
 	Pickaxe = {inputs = {"Branches": 2, "Ingot": 3}, amount = 1},
 	CrudePickaxe = {inputs = {"Branches": 2, "Stone": 5}, amount = 1},

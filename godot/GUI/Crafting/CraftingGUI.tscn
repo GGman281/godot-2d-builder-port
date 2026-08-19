@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://db2qu8ol0vj47" path="res://GUI/Crafting/CraftingGUI.gd" id="2"]
 
 [node name="CraftingGUI" type="MarginContainer" unique_id=1965368421]
+anchors_preset = -1
 offset_right = 90.0
 offset_bottom = 90.0
 theme = ExtResource("1")

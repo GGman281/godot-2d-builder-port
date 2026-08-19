@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://c818npetbsfqr" path="res://Shared/tileset.svg" id="1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lvu1p"]
+resource_name = "Floor"
 texture = ExtResource("1")
 margins = Vector2i(10, 10)
 texture_region_size = Vector2i(100, 100)
@@ -37,6 +38,7 @@ texture_region_size = Vector2i(100, 100)
 0:0/7/texture_origin = Vector2i(0, -25)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rli5b"]
+resource_name = "barrier"
 texture = ExtResource("1")
 margins = Vector2i(450, 230)
 texture_region_size = Vector2i(100, 100)
@@ -71,13 +73,14 @@ texture_region_size = Vector2i(100, 100)
 0:0/7/texture_origin = Vector2i(0, -25)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ubg8k"]
+resource_name = "barrier_invisible"
 texture = ExtResource("1")
 margins = Vector2i(560, 230)
 texture_region_size = Vector2i(100, 100)
 0:0/next_alternative_id = 8
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, -25)
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(50.801003, -24.7609, 50.801003, 25.1389, 0.230999, 50.591003, -51.00842, 25.1389, -50.338623, -25.0958, 0.230999, -51.55267)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -25, -50, 0, -50, 50, 0, 75, 50, 50, 50, 0)
 0:0/1 = 1
 0:0/1/flip_h = true
 0:0/1/texture_origin = Vector2i(0, -25)

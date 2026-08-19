@@ -4,6 +4,7 @@ extends Node
 
 ## Signal for the entity to react to it for when the receiver gets an amount of
 ## power each system tick. Passes in the amount of power and the delta for the tick.
+@warning_ignore("unused_signal") # DEBUG
 signal received_power(amount, delta)
 
 ## The required amount of power for the machine to optimally function in units per tick.

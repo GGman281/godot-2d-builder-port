@@ -70,7 +70,6 @@ func add_to_first_available_inventory(item: BlueprintEntity) -> bool:
 				panel.held_item.stack_count += item.stack_count
 				item.queue_free()
 				return true
-
 		elif not panel.held_item:
 			panel.held_item = item
 			return true
