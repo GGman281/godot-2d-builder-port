@@ -41,21 +41,19 @@ texture_region_size = Vector2i(100, 100)
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rli5b"]
 resource_name = "barrier"
 texture = ExtResource("1")
-margins = Vector2i(10, 10)
-separation = Vector2i(10, 10)
+margins = Vector2i(450, 230)
 texture_region_size = Vector2i(100, 100)
-4:2/0 = 0
-4:2/0/texture_origin = Vector2i(0, -25)
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, -25)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ubg8k"]
 resource_name = "barrier_invisible"
 texture = ExtResource("1")
-margins = Vector2i(10, 10)
-separation = Vector2i(10, 10)
+margins = Vector2i(560, 230)
 texture_region_size = Vector2i(100, 100)
-5:2/0 = 0
-5:2/0/texture_origin = Vector2i(0, -25)
-5:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -25, -50, 0, -50, 50, 0, 75, 50, 50, 50, 0)
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, -25)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -25, -50, 0, -50, 50, 0, 75, 50, 50, 50, 0)
 
 [resource]
 tile_shape = 1

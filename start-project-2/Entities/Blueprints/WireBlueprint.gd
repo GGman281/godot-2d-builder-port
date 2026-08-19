@@ -21,8 +21,8 @@ const DIRECTIONS_DATA := {
 
 @onready var sprite := $Sprite2D
 
-static func set_sprite_for_direction(sprite: Sprite2D, directions: int) -> void:
-	sprite.region_rect = get_region_for_direction(directions)
+static func set_sprite_for_direction(_sprite: Sprite2D, directions: int) -> void:
+	_sprite.region_rect = get_region_for_direction(directions)
 
 static func get_region_for_direction(directions: int) -> Rect2:
 	if not DIRECTIONS_DATA.has(directions):

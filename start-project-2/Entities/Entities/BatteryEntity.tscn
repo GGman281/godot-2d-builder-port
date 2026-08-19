@@ -9,6 +9,12 @@
 [sub_resource type="Shader" id="1"]
 code = "shader_type canvas_item;
 
+varying vec4 MODULATE; 
+
+void vertex() {
+	MODULATE = COLOR;
+}
+
 //A percentage from 0 to 1 for how full the battery is
 uniform float amount : hint_range(0, 1) = 0.0;
 
@@ -32,6 +38,7 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="2"]
 resource_local_to_scene = true
 shader = SubResource("1")
+shader_parameter/amount = 0.0
 
 [node name="BatteryEntity" type="StaticBody2D" unique_id=1928678684 groups=["power_receivers", "power_sources"]]
 script = ExtResource("4")

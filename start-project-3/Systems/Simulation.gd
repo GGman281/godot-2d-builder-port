@@ -5,8 +5,8 @@ const BARRIER_ID := 1
 # Atlas source ID
 const INVISIBLE_BARRIER_SOURCE_ID := 2
 
-# Will only change if resized atlas
-const INVISIBLE_BARRIER_POSITION_IN_ATLAS := Vector2i(5, 2)
+# Position in atlas
+const INVISIBLE_BARRIER_POSITION_IN_ATLAS := Vector2i(0, 0)
 
 @export var simulation_speed := 1.0 / 30.0
 

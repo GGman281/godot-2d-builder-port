@@ -74,5 +74,3 @@ polygon = PackedVector2Array(-0.133301, 25.2961, -49.9564, -0.351212, -49.9564, 
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=124611041]
 libraries/ = SubResource("AnimationLibrary_53l7j")
-
-[node name="Tween" type="Tween" parent="." unique_id=263016522]

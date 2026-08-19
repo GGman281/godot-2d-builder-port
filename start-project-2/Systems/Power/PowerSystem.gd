@@ -115,7 +115,7 @@ func _on_systems_ticked(delta: float) -> void:
 		
 		var power_draw := 0.0
 
-		for cell in path.slice(1, path.size()-1):
+		for cell in path.slice(1, path.size()):
 			if not power_receivers.has(cell):
 				continue
 

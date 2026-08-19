@@ -1,8 +1,6 @@
-extends TileMap
+extends TileMapLayer
 
 const MAXIMUM_WORK_DISTANCE := 275.0
-
-const POSITION_OFFSET := Vector2(0,25)
 
 const DECONSTRUCT_TIME := 0.3
 
@@ -10,11 +8,11 @@ var _blueprint: BlueprintEntity
 
 var _tracker: EntityTracker
 
-var _ground: TileMap
+var _ground: TileMapLayer
 
 var _player: CharacterBody2D
 
-var _current_deconstruct_location := Vector2.ZERO
+var _current_deconstruct_location := Vector2i.ZERO
 
 var _flat_entities: Node2D
 
@@ -52,28 +50,28 @@ func _unhandled_input(event: InputEvent) -> void:
 		< MAXIMUM_WORK_DISTANCE
 	)
 	
-	var cellv := local_to_map(global_mouse_position)
+	var mouses_cell_position:Vector2i = local_to_map(get_local_mouse_position())
 	
-	var cell_is_occupied := _tracker.is_cell_occupied(cellv)
+	var cell_is_occupied := _tracker.is_cell_occupied(mouses_cell_position)
 	
-	var is_on_ground := _ground.get_cellv(cellv) == 0
+	var is_on_ground := _ground.get_cell_source_id(mouses_cell_position) == 0
 
 	if event.is_action_pressed("left_click"):
 		if has_placeable_blueprint:
 			if not cell_is_occupied and is_close_to_player and is_on_ground:
-				_place_entity(cellv)
-				_update_neighboring_flat_entities(cellv)
+				_place_entity(mouses_cell_position)
+				_update_neighboring_flat_entities(mouses_cell_position)
 
 	elif event.is_action_pressed("right_click") and not has_placeable_blueprint:
 		if cell_is_occupied and is_close_to_player:
-			_deconstruct(global_mouse_position, cellv)
+			_deconstruct(global_mouse_position, mouses_cell_position)
 
 	elif event is InputEventMouseMotion:
-		if cellv != _current_deconstruct_location:
+		if mouses_cell_position != _current_deconstruct_location:
 			_abort_deconstruct()
 		
 		if has_placeable_blueprint:
-			_move_blueprint_in_world(cellv)
+			_move_blueprint_in_world(mouses_cell_position)
 
 	elif event.is_action_pressed("drop") and _blueprint:
 		remove_child(_blueprint)
@@ -87,19 +85,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			remove_child(_blueprint)
 		_blueprint = Library.StirlingEngine
 		add_child(_blueprint)
-		_move_blueprint_in_world(cellv)
+		_move_blueprint_in_world(mouses_cell_position)
 	elif event.is_action_pressed("quickbar_2"):
 		if _blueprint:
 			remove_child(_blueprint)
 		_blueprint = Library.Wire
 		add_child(_blueprint)
-		_move_blueprint_in_world(cellv)
+		_move_blueprint_in_world(mouses_cell_position)
 	elif event.is_action_pressed("quickbar_3"):
 		if _blueprint:
 			remove_child(_blueprint)
 		_blueprint = Library.Battery
 		add_child(_blueprint)
-		_move_blueprint_in_world(cellv)
+		_move_blueprint_in_world(mouses_cell_position)
 
 
 func _process(_delta: float) -> void:
@@ -108,7 +106,7 @@ func _process(_delta: float) -> void:
 		_move_blueprint_in_world(local_to_map(get_global_mouse_position()))
 
 
-func setup(tracker: EntityTracker, ground: TileMap, flat_entities: Node2D, player: CharacterBody2D) -> void:
+func setup(tracker: EntityTracker, ground: TileMapLayer, flat_entities: Node2D, player: CharacterBody2D) -> void:
 	_tracker = tracker
 	_ground = ground
 	_player = player
@@ -131,7 +129,7 @@ func _place_entity(cellv: Vector2) -> void:
 	else:
 		add_child(new_entity)
 
-	new_entity.global_position = map_to_local(cellv) + POSITION_OFFSET
+	new_entity.global_position = map_to_local(cellv)
 
 	new_entity._setup(_blueprint)
 
@@ -139,14 +137,14 @@ func _place_entity(cellv: Vector2) -> void:
 
 
 func _move_blueprint_in_world(cellv: Vector2) -> void:
-	_blueprint.global_position = map_to_local(cellv) + POSITION_OFFSET
+	_blueprint.global_position = map_to_local(cellv)
 
 	var is_close_to_player := (
 		get_global_mouse_position().distance_to(_player.global_position)
 		< MAXIMUM_WORK_DISTANCE
 	)
 
-	var is_on_ground: bool = _ground.get_cellv(cellv) == 0
+	var is_on_ground: bool = _ground.get_cell_source_id(cellv) == 0
 	var cell_is_occupied := _tracker.is_cell_occupied(cellv)
 
 	if not cell_is_occupied and is_close_to_player and is_on_ground:
@@ -158,16 +156,16 @@ func _move_blueprint_in_world(cellv: Vector2) -> void:
 		WireBlueprint.set_sprite_for_direction(_blueprint.sprite, _get_powered_neighbors(cellv))
 
 
-func _deconstruct(event_position: Vector2, cellv: Vector2) -> void:
+func _deconstruct(_event_position: Vector2, cellv: Vector2) -> void:
 	_deconstruct_timer.connect(
-		"timeout", self, "_finish_deconstruct", [cellv], CONNECT_ONE_SHOT
+		"timeout", _finish_deconstruct.bind(cellv), CONNECT_ONE_SHOT
 	)
 	_deconstruct_timer.start(DECONSTRUCT_TIME)
 	_current_deconstruct_location = cellv
 
 
 func _finish_deconstruct(cellv: Vector2) -> void:
-	var entity := _tracker.get_entity_at(cellv)
+	var _entity := _tracker.get_entity_at(cellv)
 	_tracker.remove_entity(cellv)
 	_update_neighboring_flat_entities(cellv)
 
