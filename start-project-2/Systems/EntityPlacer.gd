@@ -12,19 +12,19 @@ var _tracker: EntityTracker
 
 var _ground: TileMap
 
-var _player: KinematicBody2D
+var _player: CharacterBody2D
 
 var _current_deconstruct_location := Vector2.ZERO
 
-var _flat_entities: YSort
+var _flat_entities: Node2D
 
-onready var Library := {
-	"StirlingEngine": preload("res://Entities/Blueprints/StirlingEngineBlueprint.tscn").instance(),
-	"Wire": preload("res://Entities/Blueprints/WireBlueprint.tscn").instance(),
-	"Battery": preload("res://Entities/Blueprints/BatteryBlueprint.tscn").instance()
+@onready var Library := {
+	"StirlingEngine": preload("res://Entities/Blueprints/StirlingEngineBlueprint.tscn").instantiate(),
+	"Wire": preload("res://Entities/Blueprints/WireBlueprint.tscn").instantiate(),
+	"Battery": preload("res://Entities/Blueprints/BatteryBlueprint.tscn").instantiate()
 }
 
-onready var _deconstruct_timer := $Timer
+@onready var _deconstruct_timer := $Timer
 
 
 func _ready() -> void:
@@ -52,7 +52,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		< MAXIMUM_WORK_DISTANCE
 	)
 	
-	var cellv := world_to_map(global_mouse_position)
+	var cellv := local_to_map(global_mouse_position)
 	
 	var cell_is_occupied := _tracker.is_cell_occupied(cellv)
 	
@@ -105,10 +105,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	var has_placeable_blueprint: bool = _blueprint and _blueprint.placeable
 	if has_placeable_blueprint:
-		_move_blueprint_in_world(world_to_map(get_global_mouse_position()))
+		_move_blueprint_in_world(local_to_map(get_global_mouse_position()))
 
 
-func setup(tracker: EntityTracker, ground: TileMap, flat_entities: YSort, player: KinematicBody2D) -> void:
+func setup(tracker: EntityTracker, ground: TileMap, flat_entities: Node2D, player: CharacterBody2D) -> void:
 	_tracker = tracker
 	_ground = ground
 	_player = player
@@ -116,13 +116,13 @@ func setup(tracker: EntityTracker, ground: TileMap, flat_entities: YSort, player
 
 	for child in get_children():
 		if child is Entity:
-			var map_position := world_to_map(child.global_position)
+			var map_position := local_to_map(child.global_position)
 			
 			_tracker.place_entity(child, map_position)
 
 
 func _place_entity(cellv: Vector2) -> void:
-	var new_entity: Node2D = Library[_blueprint].instance()
+	var new_entity: Node2D = Library[_blueprint].instantiate()
 
 	if _blueprint is WireBlueprint:
 		var directions := _get_powered_neighbors(cellv)
@@ -131,7 +131,7 @@ func _place_entity(cellv: Vector2) -> void:
 	else:
 		add_child(new_entity)
 
-	new_entity.global_position = map_to_world(cellv) + POSITION_OFFSET
+	new_entity.global_position = map_to_local(cellv) + POSITION_OFFSET
 
 	new_entity._setup(_blueprint)
 
@@ -139,7 +139,7 @@ func _place_entity(cellv: Vector2) -> void:
 
 
 func _move_blueprint_in_world(cellv: Vector2) -> void:
-	_blueprint.global_position = map_to_world(cellv) + POSITION_OFFSET
+	_blueprint.global_position = map_to_local(cellv) + POSITION_OFFSET
 
 	var is_close_to_player := (
 		get_global_mouse_position().distance_to(_player.global_position)
@@ -150,9 +150,9 @@ func _move_blueprint_in_world(cellv: Vector2) -> void:
 	var cell_is_occupied := _tracker.is_cell_occupied(cellv)
 
 	if not cell_is_occupied and is_close_to_player and is_on_ground:
-		_blueprint.modulate = Color.white
+		_blueprint.modulate = Color.WHITE
 	else:
-		_blueprint.modulate = Color.red
+		_blueprint.modulate = Color.RED
 	
 	if _blueprint is WireBlueprint:
 		WireBlueprint.set_sprite_for_direction(_blueprint.sprite, _get_powered_neighbors(cellv))
@@ -160,7 +160,7 @@ func _move_blueprint_in_world(cellv: Vector2) -> void:
 
 func _deconstruct(event_position: Vector2, cellv: Vector2) -> void:
 	_deconstruct_timer.connect(
-		"timeout", self, "_finish_deconstruct", [cellv], CONNECT_ONESHOT
+		"timeout", self, "_finish_deconstruct", [cellv], CONNECT_ONE_SHOT
 	)
 	_deconstruct_timer.start(DECONSTRUCT_TIME)
 	_current_deconstruct_location = cellv
@@ -173,8 +173,8 @@ func _finish_deconstruct(cellv: Vector2) -> void:
 
 
 func _abort_deconstruct() -> void:
-	if _deconstruct_timer.is_connected("timeout", self, "_finish_deconstruct"):
-		_deconstruct_timer.disconnect("timeout", self, "_finish_deconstruct")
+	if _deconstruct_timer.is_connected("timeout", Callable(self, "_finish_deconstruct")):
+		_deconstruct_timer.disconnect("timeout", Callable(self, "_finish_deconstruct"))
 	_deconstruct_timer.stop()
 
 

@@ -19,9 +19,9 @@ const DIRECTIONS_DATA := {
 	11: Rect2(230, 120, 100, 100)
 }
 
-onready var sprite := $Sprite
+@onready var sprite := $Sprite2D
 
-static func set_sprite_for_direction(sprite: Sprite, directions: int) -> void:
+static func set_sprite_for_direction(sprite: Sprite2D, directions: int) -> void:
 	sprite.region_rect = get_region_for_direction(directions)
 
 static func get_region_for_direction(directions: int) -> Rect2:

@@ -3,15 +3,15 @@ extends Node
 const BARRIER_ID := 1
 const INVISIBLE_BARRIER_ID := 2
 
-export var simulation_speed := 1.0 / 30.0
+@export var simulation_speed := 1.0 / 30.0
 
 var _tracker := EntityTracker.new()
 
-onready var _power_system := PowerSystem.new()
-onready var _ground := $GameWorld/GroundTiles
-onready var _entity_placer := $GameWorld/YSort/EntityPlacer
-onready var _player := $GameWorld/YSort/Player
-onready var _flat_entities := $GameWorld/FlatEntities
+@onready var _power_system := PowerSystem.new()
+@onready var _ground := $GameWorld/GroundTiles
+@onready var _entity_placer := $GameWorld/Node2D/EntityPlacer
+@onready var _player := $GameWorld/Node2D/Player
+@onready var _flat_entities := $GameWorld/FlatEntities
 
 
 func _ready() -> void:
