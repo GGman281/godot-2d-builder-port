@@ -16,7 +16,7 @@ func _ready() -> void:
 func setup(gui: Control) -> void:
 	for panel in panels:
 		panel.setup(gui)
-		panel.connect("held_item_changed", Callable(self, "_on_Panel_held_item_changed"))
+		panel.held_item_changed.connect(_on_Panel_held_item_changed)
 
 
 func find_panels_with(item_id: String) -> Array:
@@ -38,7 +38,7 @@ func add_to_first_available_inventory(item: BlueprintEntity) -> bool:
 			and panel.held_item.stack_count < panel.held_item.stack_size
 		):
 			var available_space: int = panel.held_item.stack_size - panel.held_item.stack_count
-			
+
 			if item.stack_count > available_space:
 				panel.held_item.stack_count += available_space
 				item.stack_count -= available_space

@@ -42,18 +42,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		_abort_deconstruct()
 
 	var global_mouse_position := get_global_mouse_position()
-	
+
 	var has_placeable_blueprint: bool = _blueprint and _blueprint.placeable
 
 	var is_close_to_player := (
 		global_mouse_position.distance_to(_player.global_position)
 		< MAXIMUM_WORK_DISTANCE
 	)
-	
+
 	var mouses_cell_position:Vector2i = local_to_map(get_local_mouse_position())
-	
+
 	var cell_is_occupied := _tracker.is_cell_occupied(mouses_cell_position)
-	
+
 	var is_on_ground := _ground.get_cell_source_id(mouses_cell_position) == 0
 
 	if event.is_action_pressed("left_click"):
@@ -69,17 +69,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion:
 		if mouses_cell_position != _current_deconstruct_location:
 			_abort_deconstruct()
-		
+
 		if has_placeable_blueprint:
 			_move_blueprint_in_world(mouses_cell_position)
 
 	elif event.is_action_pressed("drop") and _blueprint:
 		remove_child(_blueprint)
 		_blueprint = null
-	
+
 	elif event.is_action_pressed("rotate_blueprint") and _blueprint:
 		_blueprint.rotate_blueprint()
-	
+
 	elif event.is_action_pressed("quickbar_1"):
 		if _blueprint:
 			remove_child(_blueprint)
@@ -115,7 +115,7 @@ func setup(tracker: EntityTracker, ground: TileMapLayer, flat_entities: Node2D, 
 	for child in get_children():
 		if child is Entity:
 			var map_position := local_to_map(child.global_position)
-			
+
 			_tracker.place_entity(child, map_position)
 
 
@@ -151,15 +151,13 @@ func _move_blueprint_in_world(cellv: Vector2) -> void:
 		_blueprint.modulate = Color.WHITE
 	else:
 		_blueprint.modulate = Color.RED
-	
+
 	if _blueprint is WireBlueprint:
 		WireBlueprint.set_sprite_for_direction(_blueprint.sprite, _get_powered_neighbors(cellv))
 
 
 func _deconstruct(_event_position: Vector2, cellv: Vector2) -> void:
-	_deconstruct_timer.connect(
-		"timeout", _finish_deconstruct.bind(cellv), CONNECT_ONE_SHOT
-	)
+	_deconstruct_timer.timeout.connect(_finish_deconstruct.bind(cellv), CONNECT_ONE_SHOT)
 	_deconstruct_timer.start(DECONSTRUCT_TIME)
 	_current_deconstruct_location = cellv
 
@@ -171,8 +169,8 @@ func _finish_deconstruct(cellv: Vector2) -> void:
 
 
 func _abort_deconstruct() -> void:
-	if _deconstruct_timer.is_connected("timeout", Callable(self, "_finish_deconstruct")):
-		_deconstruct_timer.disconnect("timeout", Callable(self, "_finish_deconstruct"))
+	if _deconstruct_timer.timeout.is_connected(_finish_deconstruct):
+		_deconstruct_timer.timeout.disconnect(_finish_deconstruct)
 	_deconstruct_timer.stop()
 
 

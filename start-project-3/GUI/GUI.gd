@@ -32,15 +32,15 @@ var is_open := false
 func _ready() -> void:
 	player_inventory.setup(self)
 	quickbar.setup(self)
-	Events.connect("entered_pickup_area", Callable(self, "_on_Player_entered_pickup_area"))
-	
+	Events.entered_pickup_area.connect(_on_Player_entered_pickup_area)
+
 	for item in debug_items.keys():
 		if not Library.blueprints.has(item):
 			continue
 
 		var item_instance = Library.blueprints[item].instantiate()
 		item_instance.stack_count = min(item_instance.stack_size, debug_items[item])
-		
+
 		if not add_to_inventory(item_instance):
 			item_instance.queue_free()
 
@@ -111,7 +111,7 @@ func _simulate_input(panel: InventoryPanel) -> void:
 	var input := InputEventMouseButton.new()
 	input.button_index = MOUSE_BUTTON_LEFT
 	input.pressed = true
-	
+
 	panel._gui_input(input)
 
 
@@ -134,7 +134,7 @@ func _on_Player_entered_pickup_area(item: GroundItem, player: CharacterBody2D) -
 		else:
 			if item.blueprint.stack_count < amount:
 				var new_item := item.duplicate()
-				
+
 				item.get_parent().call_deferred("add_child", new_item)
 				new_item.call_deferred("setup", item.blueprint)
 				new_item.call_deferred("do_pickup", player)

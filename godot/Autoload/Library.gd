@@ -43,7 +43,7 @@ func _find_entities_in(path: String) -> void:
 		Log.log_error(error, "Library")
 		return
 
-	error = directory.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
+	error = directory.list_dir_begin()
 	if error != OK:
 		Log.log_error(error, "Library")
 		return

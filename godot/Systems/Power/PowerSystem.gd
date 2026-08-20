@@ -16,9 +16,9 @@ var receivers_already_provided := {}
 
 
 func _init() -> void:
-	Log.log_error(Events.connect("entity_placed", Callable(self, "_on_entity_placed")), "Power System")
-	Log.log_error(Events.connect("entity_removed", Callable(self, "_on_entity_removed")), "Power System")
-	Log.log_error(Events.connect("systems_ticked", Callable(self, "_on_systems_ticked")), "Power System")
+	Log.log_error(Events.entity_placed.connect(_on_entity_placed), "Power System")
+	Log.log_error(Events.entity_removed.connect(_on_entity_removed), "Power System")
+	Log.log_error(Events.systems_ticked.connect(_on_systems_ticked), "Power System")
 
 
 func _retrace_paths() -> void:
@@ -143,7 +143,7 @@ func _on_systems_ticked(delta: float) -> void:
 				receivers_already_provided[cell] += min(available_power, power_required)
 
 			available_power = max(available_power - power_required, 0)
-			
+
 			if available_power == 0:
 				break
 

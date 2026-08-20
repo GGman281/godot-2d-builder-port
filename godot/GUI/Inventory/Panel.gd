@@ -1,4 +1,4 @@
-# Represents a slot in which an item can be held. Inventory is kept track of 
+# Represents a slot in which an item can be held. Inventory is kept track of
 # through being a child of the panel.
 class_name InventoryPanel
 extends Panel
@@ -79,15 +79,15 @@ func _set_held_item(value: BlueprintEntity) -> void:
 	if is_instance_valid(held_item) and held_item.get_parent() == self:
 		remove_child(held_item)
 	held_item = value
-	if held_item: # update label on count change 
-		if not held_item.is_connected("stack_count_changed", _update_label):
-			held_item.connect("stack_count_changed", _update_label)
+	if held_item: # update label on count change
+		if not held_item.stack_count_changed.is_connected(_update_label):
+			held_item.stack_count_changed.connect(_update_label)
 
 	if is_instance_valid(held_item):
 		add_child(held_item)
 		move_child(held_item, 0)
 		held_item.make_inventory()
-	
+
 	_update_label()
 	emit_signal("held_item_changed", self, held_item)
 
@@ -137,7 +137,7 @@ func _grab_item() -> void:
 	var item: BlueprintEntity = gui.blueprint
 	gui.blueprint = null
 	self.held_item = item
-	
+
 
 
 func _release_item() -> void:

@@ -20,11 +20,8 @@ func _ready() -> void:
 func setup(gui: Control) -> void:
 	for panel in panels:
 		panel.setup(gui, _filter_list)
-		if not panel.is_connected("held_item_changed", Callable(self, "_on_Panel_held_item_changed")):
-			Log.log_error(
-				panel.connect("held_item_changed", Callable(self, "_on_Panel_held_item_changed")),
-				"Inventory Bar"
-			)
+		if not panel.held_item_changed.is_connected(_on_Panel_held_item_changed):
+			Log.log_error(panel.held_item_changed.connect(_on_Panel_held_item_changed), "Inventory Bar")
 
 
 func find_panels_with(item_id: String) -> Array:
@@ -52,7 +49,7 @@ func update_labels() -> void:
 
 func add_to_first_available_inventory(item: BlueprintEntity) -> bool:
 	var item_name := Library.get_entity_name_from(item)
-	
+
 	if not Library.is_valid_filter(_filter_list, item_name):
 		return false
 

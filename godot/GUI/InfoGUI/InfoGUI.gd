@@ -9,13 +9,9 @@ var current_entity: Node
 
 func _ready() -> void:
 	set_as_top_level(true)
-	Log.log_error(
-		Events.connect("hovered_over_entity", Callable(self, "_on_hovered_over_entity")), "Info GUI"
-	)
-	Log.log_error(Events.connect("info_updated", Callable(self, "_on_info_updated")), "Info GUI")
-	Log.log_error(
-		Events.connect("hovered_over_recipe", Callable(self, "_on_hovered_over_recipe")), "Info GUI"
-	)
+	Log.log_error(Events.hovered_over_entity.connect(_on_hovered_over_entity), "Info GUI")
+	Log.log_error(Events.info_updated.connect(_on_info_updated), "Info GUI")
+	Log.log_error(Events.hovered_over_recipe.connect(_on_hovered_over_recipe), "Info GUI")
 	hide()
 
 
@@ -62,7 +58,7 @@ func _on_hovered_over_recipe(output: String, recipe: Dictionary) -> void:
 	var blueprint: BlueprintEntity = Library.blueprints[output].instantiate()
 	_set_info(blueprint)
 	blueprint.free()
-	
+
 	label.text = "%sx %s" % [recipe.amount, label.text]
 
 	var inputs: Dictionary = recipe.inputs

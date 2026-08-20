@@ -237,16 +237,14 @@ func _deconstruct(event_position: Vector2, cellv: Vector2) -> void:
 	deconstruct_bar.show()
 
 	var modifier:float = 1.0 if not blueprint is ToolEntity else 1.0 / blueprint.tool_speed
-	
+
 	var _deconstruct_tween := create_tween()
 	_deconstruct_tween.tween_property(
 		deconstruct_bar, "value", 100, DECONSTRUCT_TIME * modifier
 	).from(0)
 
 	Log.log_error(
-		_deconstruct_timer.connect(
-			"timeout", _finish_deconstruct.bind(cellv), CONNECT_ONE_SHOT
-		),
+		_deconstruct_timer.timeout.connect(_finish_deconstruct.bind(cellv), CONNECT_ONE_SHOT),
 		"Entity Placer"
 	)
 	_deconstruct_timer.start(DECONSTRUCT_TIME * modifier)
@@ -281,8 +279,8 @@ func _finish_deconstruct(cellv: Vector2) -> void:
 
 
 func _abort_deconstruct() -> void:
-	if _deconstruct_timer.is_connected("timeout", Callable(self, "_finish_deconstruct")):
-		_deconstruct_timer.disconnect("timeout", Callable(self, "_finish_deconstruct"))
+	if _deconstruct_timer.timeout.is_connected(_finish_deconstruct):
+		_deconstruct_timer.timeout.disconnect(_finish_deconstruct)
 	_deconstruct_timer.stop()
 	_gui.deconstruct_bar.hide()
 

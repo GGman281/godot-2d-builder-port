@@ -16,16 +16,9 @@ var gui: Control
 func _ready() -> void:
 	assert(GuiWindow, "You must specify the GUIWindow property for a GUI Component")
 	gui = GuiWindow.instantiate()
-	Log.log_error(
-		gui.connect("gui_status_changed", Callable(self, "emit_signal").bind("gui_status_changed")),
-		"GUI Component"
-	)
-	Log.log_error(
-		gui.connect("gui_opened", Callable(self, "emit_signal").bind("gui_opened")), "GUI Component"
-	)
-	Log.log_error(
-		gui.connect("gui_closed", Callable(self, "emit_signal").bind("gui_closed")), "GUI Component"
-	)
+	Log.log_error(gui.gui_status_changed.connect(emit_signal.bind("gui_status_changed")), "GUI Component")
+	Log.log_error(gui.gui_opened.connect(emit_signal.bind("gui_opened")), "GUI Component")
+	Log.log_error(gui.gui_closed.connect(emit_signal.bind("gui_closed")), "GUI Component")
 
 
 func get_inventory_bars() -> Array:

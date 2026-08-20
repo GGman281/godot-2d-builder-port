@@ -34,9 +34,7 @@ func _ready() -> void:
 	player_inventory.setup(self)
 	quickbar.setup(self)
 	crafting_window.setup(self)
-	Log.log_error(
-		Events.connect("entered_pickup_area", _on_Player_entered_pickup_area), "GUI"
-	)
+	Log.log_error(Events.entered_pickup_area.connect(_on_Player_entered_pickup_area), "GUI")
 
 	# ----- Temp Debug system -----
 	# TODO: Make proper debug system
@@ -130,7 +128,7 @@ func open_entity_gui(entity: Entity) -> void:
 	var component := get_gui_component_from(entity)
 	if not component:
 		return
-	
+
 	if is_open:
 		_close_inventories()
 
